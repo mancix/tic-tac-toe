@@ -1,0 +1,38 @@
+version: "3.7"
+
+networks:
+  app-network:
+    driver: bridge
+
+services:
+  app:
+    build:
+      args:
+        PUID: ${PUID}
+        PGID: ${PGID}
+        DEFAULT_USER: ${DOCKER_USER}
+      context: .
+      dockerfile: docker/Dockerfile
+    container_name: tic-tac-toe
+    tty: true
+    volumes:
+      - ./:/var/www/tic-tac-toe
+      - ./docker/apache/virtualhost.conf:/etc/apache2/sites-available/000-default.conf
+    networks:
+      - app-network
+    ports:
+      - "80:80"
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - ~/apps/postgres:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=tic
+      - POSTGRES_USER=tic
+      - POSTGRES_DB=game
+    networks:
+      - app-network
