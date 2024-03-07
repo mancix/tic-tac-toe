@@ -13,7 +13,12 @@ RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 RUN apt-get update && apt-get install -y \
     curl \
     libpq-dev \
-    libicu-dev
+    libicu-dev \
+    libpng-dev \
+    libonig-dev \
+    libxml2-dev \
+    zip \
+    unzip
 
 RUN curl -1sLf 'https://dl.cloudsmith.io/public/symfony/stable/setup.deb.sh' | bash
 RUN apt install -y symfony-cli
@@ -37,8 +42,14 @@ RUN pecl install xdebug \
     && docker-php-ext-enable xdebug \
     && touch /var/log/xdebug_remote.log && chmod 777 /var/log/xdebug_remote.log
 
+# Install PHP extensions
 RUN docker-php-ext-install opcache
 RUN docker-php-ext-install intl
+RUN docker-php-ext-install mbstring
+RUN docker-php-ext-install exif
+RUN docker-php-ext-install pcntl
+RUN docker-php-ext-install bcmath
+RUN docker-php-ext-install gd
 
 COPY ./docker/config/xdebug.ini "$PHP_INI_DIR/conf.d/docker-php-ext-xdebug.ini"
 
@@ -54,6 +65,6 @@ RUN a2enmod rewrite
 RUN a2enmod headers
 
 # set the workdir
-WORKDIR /var/www
+WORKDIR /var/www/tic-tac-toe
 
 USER ${DEFAULT_USER}
