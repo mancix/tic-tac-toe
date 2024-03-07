@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Exception\AlreadyTakenPositionException;
+use App\Exception\GameOverException;
 use App\Exception\InvalidPlayerException;
 use App\Exception\InvalidPositionException;
 
@@ -25,10 +26,14 @@ class TicTacToeService implements TicTacToeServiceInterface
     /**
      * @return array<int|null>[]
      *
-     * @throws InvalidPositionException|InvalidPlayerException|AlreadyTakenPositionException
+     * @throws InvalidPositionException|InvalidPlayerException|AlreadyTakenPositionException|GameOverException
      */
     public function makeAMove(int $player, int $position): array
     {
+        if (null !== $this->getWinner()) {
+            throw new GameOverException();
+        }
+
         if ((1 !== $player && 2 !== $player) || (null !== $this->player && $player === $this->player)) {
             throw new InvalidPlayerException();
         }
@@ -71,6 +76,9 @@ class TicTacToeService implements TicTacToeServiceInterface
         return $this->board;
     }
 
+    /**
+     * @return int|null 1|2|null
+     */
     public function getWinner(): ?int
     {
         $winner = null;
@@ -149,20 +157,17 @@ class TicTacToeService implements TicTacToeServiceInterface
     /**
      * @param array<int|null>[] $board
      */
-    public function setBoard(array $board): static
+    public function restoreGame(array $board, ?int $lastPlayer): static
     {
         $this->board = $board;
+        $this->player = $lastPlayer;
 
         return $this;
     }
 
-    public function setPlayer(int $player): static
-    {
-        $this->player = $player;
-
-        return $this;
-    }
-
+    /**
+     * @return int|null 1|2|null
+     */
     public function getLastPlayer(): ?int
     {
         return $this->player;

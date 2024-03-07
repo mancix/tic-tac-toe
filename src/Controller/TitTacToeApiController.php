@@ -2,47 +2,59 @@
 
 namespace App\Controller;
 
-use App\Entity\TicTacToeGameSession;
+use App\Dto\MakeAMoveRequest;
 use App\Service\TicTacToeServiceInterface;
-use Doctrine\ORM\EntityManagerInterface;
+use App\Service\TicTacToeSessionService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Attribute\Route;
 
-#[Route('/api', name: 'api_')]
+#[Route('/tic_tac_toe', name: 'tic-tac-toe-api')]
 class TitTacToeApiController extends AbstractController
 {
     public function __construct(
-        private EntityManagerInterface $entityManager,
+        private TicTacToeSessionService $ticTacToeSessionService,
         private TicTacToeServiceInterface $ticTacToeService,
     ) {
     }
 
-    #[Route('/tictactoe', name: 'app_tit_tac_toe_api', methods: ['GET', 'HEAD'])]
-    public function index(): JsonResponse
+    #[Route('/new_game', name: 'new-game-api', methods: ['POST'])]
+    public function createNewGame(): JsonResponse
     {
-        $repo = $this->entityManager->getRepository(TicTacToeGameSession::class);
+        $newSession = $this->ticTacToeSessionService->createNewGameSession();
 
-        $test = $repo->find(3);
-
-        dump($test);
-
-        /*$test = new TicTacToeGameSession();
-        $board = [
-            [null, null, null],
-            [null, null, null],
-            [null, null, null],
-        ];
-
-        $test->setBoard($board)
-            ->setCreatedAt(new \DateTimeImmutable())
-            ->setUpdatedAt(new \DateTimeImmutable());
-
-        $this->entityManager->persist($test);
-        $this->entityManager->flush();*/
         return $this->json([
-            'message' => $test->getId(),
-            'path' => 'src/Controller/TitTacToeApiController.php',
+            'sessionId' => $newSession->getId(),
+        ], 201);
+    }
+
+    // https://symfony.com/doc/current/controller/error_pages.html#overriding-the-default-errorcontroller
+    // https://symfony.com/blog/new-in-symfony-6-3-mapping-request-data-to-typed-objects?utm_source=Symfony%20Blog%20Feed&utm_medium=feed
+    #[Route('/move', name: 'make-a-move-api', methods: ['POST'])]
+    public function makeAMove(#[MapRequestPayload] MakeAMoveRequest $makeAMoveRequest): JsonResponse
+    {
+        $gameSession = $this->ticTacToeSessionService->getGameSessionById($makeAMoveRequest->id);
+        if (null === $gameSession) {
+            return $this->json([
+                'error' => 'Game session not found',
+            ], 404);
+        }
+
+        $this->ticTacToeService->restoreGame($gameSession->getBoard(), $gameSession->getLastPlayer());
+        if (0 === $this->ticTacToeService->getNumberOfRemainingMoves()) {
+            return $this->json([
+                'error' => 'Game over',
+            ], 400);
+        }
+        $board = $this->ticTacToeService->makeAMove($makeAMoveRequest->player, $makeAMoveRequest->position);
+        $gameSession->setBoard($board);
+        $gameSession->setLastPlayer($this->ticTacToeService->getLastPlayer());
+        $this->ticTacToeSessionService->saveGameSession($gameSession);
+
+        return $this->json([
+            'board' => $board,
+            'winner' => $this->ticTacToeService->getWinner(),
         ]);
     }
 }

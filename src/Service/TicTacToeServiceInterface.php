@@ -19,7 +19,7 @@ interface TicTacToeServiceInterface
     /**
      * @param array<int|null>[] $board
      */
-    public function setBoard(array $board): static;
+    public function restoreGame(array $board, ?int $lastPlayer): static;
 
     /**
      * @return int|null 1|2|null

@@ -10,11 +10,9 @@ vendor
 /var/
 /vendor/
 .php-cs-fixer.cache
-
-###> phpunit/phpunit ###
-/phpunit.xml
+.DS_Store
 .phpunit.result.cache
-###< phpunit/phpunit ###
+
 
 
 docker/data
