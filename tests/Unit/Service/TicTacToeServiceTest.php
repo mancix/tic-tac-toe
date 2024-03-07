@@ -2,6 +2,8 @@
 
 namespace App\Tests\Unit\Service;
 
+use App\Exception\AlreadyTakenPositionException;
+use App\Exception\InvalidPlayerException;
 use App\Exception\InvalidPositionException;
 use App\Service\TicTacToeService;
 use PHPUnit\Framework\TestCase;
@@ -127,7 +129,9 @@ class TicTacToeServiceTest extends TestCase
     public function testDiagonalWinner(): void
     {
         $this->ticTacToeService->makeAMove(1, 0);
+        $this->ticTacToeService->makeAMove(2, 2);
         $this->ticTacToeService->makeAMove(1, 4);
+        $this->ticTacToeService->makeAMove(2, 5);
         $this->ticTacToeService->makeAMove(1, 8);
         $this->assertEquals('1', $this->ticTacToeService->getWinner());
     }
@@ -135,7 +139,9 @@ class TicTacToeServiceTest extends TestCase
     public function testRowWinner(): void
     {
         $this->ticTacToeService->makeAMove(1, 0);
+        $this->ticTacToeService->makeAMove(2, 6);
         $this->ticTacToeService->makeAMove(1, 1);
+        $this->ticTacToeService->makeAMove(2, 7);
         $this->ticTacToeService->makeAMove(1, 2);
         $this->assertEquals('1', $this->ticTacToeService->getWinner());
     }
@@ -143,7 +149,9 @@ class TicTacToeServiceTest extends TestCase
     public function testColumnWinner(): void
     {
         $this->ticTacToeService->makeAMove(1, 0);
+        $this->ticTacToeService->makeAMove(2, 2);
         $this->ticTacToeService->makeAMove(1, 3);
+        $this->ticTacToeService->makeAMove(2, 4);
         $this->ticTacToeService->makeAMove(1, 6);
         $this->assertEquals('1', $this->ticTacToeService->getWinner());
     }
@@ -181,5 +189,20 @@ class TicTacToeServiceTest extends TestCase
     private function initializeBoard(): void
     {
         $this->ticTacToeService = new TicTacToeService();
+    }
+
+    public function testInvalidPlayer(): void
+    {
+        $this->expectException(InvalidPlayerException::class);
+        $this->expectExceptionMessage('Invalid player');
+        $this->ticTacToeService->makeAMove(3, 0);
+    }
+
+    public function testAlreadyTakenPosition(): void
+    {
+        $this->expectException(AlreadyTakenPositionException::class);
+        $this->expectExceptionMessage('Position already taken');
+        $this->ticTacToeService->makeAMove(1, 0);
+        $this->ticTacToeService->makeAMove(2, 0);
     }
 }

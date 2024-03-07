@@ -31,8 +31,8 @@ services:
     volumes:
       - ./docker/data:/var/lib/postgresql/data
     environment:
-      - POSTGRES_PASSWORD=tic
-      - POSTGRES_USER=tic
+      - POSTGRES_PASSWORD=tictactoe
+      - POSTGRES_USER=tictactoe
       - POSTGRES_DB=game
     networks:
       - app-network
