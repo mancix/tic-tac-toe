@@ -4,9 +4,9 @@ namespace App\Exception;
 
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 
-class InvalidPlayerException extends \Exception implements HttpExceptionInterface
+class InvalidPlayerMoveException extends \Exception implements HttpExceptionInterface
 {
-    public const MESSAGE = 'The player must be 1 or 2';
+    public const MESSAGE = 'Invalid player move';
 
     public function __construct()
     {
@@ -18,6 +18,9 @@ class InvalidPlayerException extends \Exception implements HttpExceptionInterfac
         return 422;
     }
 
+    /**
+     * @return array<void>
+     */
     public function getHeaders(): array
     {
         return [];

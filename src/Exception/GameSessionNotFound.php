@@ -4,9 +4,9 @@ namespace App\Exception;
 
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 
-class InvalidPlayerException extends \Exception implements HttpExceptionInterface
+class GameSessionNotFound extends \Exception implements HttpExceptionInterface
 {
-    public const MESSAGE = 'The player must be 1 or 2';
+    public const MESSAGE = 'Game session not found';
 
     public function __construct()
     {
@@ -15,7 +15,7 @@ class InvalidPlayerException extends \Exception implements HttpExceptionInterfac
 
     public function getStatusCode(): int
     {
-        return 422;
+        return 404;
     }
 
     public function getHeaders(): array

@@ -5,7 +5,7 @@ namespace App\Service;
 use App\Entity\TicTacToeGameSession;
 use Doctrine\ORM\EntityManagerInterface;
 
-class TicTacToeSessionService
+class TicTacToeSessionService implements TicTacToeSessionServiceInterface
 {
     public function __construct(
         private EntityManagerInterface $entityManager,

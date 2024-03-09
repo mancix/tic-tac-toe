@@ -2,10 +2,27 @@
 
 namespace App\Exception;
 
-class GameOverException extends \Exception
+use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
+
+class GameOverException extends \Exception implements HttpExceptionInterface
 {
+    public const MESSAGE = 'Game is over';
+
     public function __construct()
     {
-        parent::__construct('Game is over');
+        parent::__construct(self::MESSAGE);
+    }
+
+    public function getStatusCode(): int
+    {
+        return 422;
+    }
+
+    /**
+     * @return array<void>
+     */
+    public function getHeaders(): array
+    {
+        return [];
     }
 }

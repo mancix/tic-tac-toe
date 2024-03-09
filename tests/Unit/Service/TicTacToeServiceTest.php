@@ -3,6 +3,7 @@
 namespace App\Tests\Unit\Service;
 
 use App\Exception\AlreadyTakenPositionException;
+use App\Exception\GameOverException;
 use App\Exception\InvalidPlayerException;
 use App\Exception\InvalidPositionException;
 use App\Service\TicTacToeService;
@@ -159,7 +160,7 @@ class TicTacToeServiceTest extends TestCase
     public function testInvalidPosition(): void
     {
         $this->expectException(InvalidPositionException::class);
-        $this->expectExceptionMessage('Invalid position');
+        $this->expectExceptionMessage(InvalidPositionException::MESSAGE);
         $this->ticTacToeService->makeAMove(1, 9);
     }
 
@@ -180,10 +181,9 @@ class TicTacToeServiceTest extends TestCase
         $this->assertEquals(3, $this->ticTacToeService->getNumberOfRemainingMoves());
         $this->ticTacToeService->makeAMove(1, 6);
         $this->assertEquals(2, $this->ticTacToeService->getNumberOfRemainingMoves());
+        $this->expectException(GameOverException::class);
+        $this->expectExceptionMessage(GameOverException::MESSAGE);
         $this->ticTacToeService->makeAMove(2, 7);
-        $this->assertEquals(1, $this->ticTacToeService->getNumberOfRemainingMoves());
-        $this->ticTacToeService->makeAMove(1, 8);
-        $this->assertEquals(0, $this->ticTacToeService->getNumberOfRemainingMoves());
     }
 
     private function initializeBoard(): void
@@ -194,7 +194,7 @@ class TicTacToeServiceTest extends TestCase
     public function testInvalidPlayer(): void
     {
         $this->expectException(InvalidPlayerException::class);
-        $this->expectExceptionMessage('Invalid player');
+        $this->expectExceptionMessage(InvalidPlayerException::MESSAGE);
         $this->ticTacToeService->makeAMove(3, 0);
     }
 

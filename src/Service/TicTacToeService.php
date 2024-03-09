@@ -5,6 +5,7 @@ namespace App\Service;
 use App\Exception\AlreadyTakenPositionException;
 use App\Exception\GameOverException;
 use App\Exception\InvalidPlayerException;
+use App\Exception\InvalidPlayerMoveException;
 use App\Exception\InvalidPositionException;
 
 class TicTacToeService implements TicTacToeServiceInterface
@@ -26,7 +27,7 @@ class TicTacToeService implements TicTacToeServiceInterface
     /**
      * @return array<int|null>[]
      *
-     * @throws InvalidPositionException|InvalidPlayerException|AlreadyTakenPositionException|GameOverException
+     * @throws InvalidPositionException|InvalidPlayerException|AlreadyTakenPositionException|GameOverException|InvalidPlayerMoveException
      */
     public function makeAMove(int $player, int $position): array
     {
@@ -34,8 +35,12 @@ class TicTacToeService implements TicTacToeServiceInterface
             throw new GameOverException();
         }
 
-        if ((1 !== $player && 2 !== $player) || (null !== $this->player && $player === $this->player)) {
+        if (1 !== $player && 2 !== $player) {
             throw new InvalidPlayerException();
+        }
+
+        if (null !== $this->player && $player === $this->player) {
+            throw new InvalidPlayerMoveException();
         }
 
         if ($position >= 0 && $position <= 8) {
