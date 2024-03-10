@@ -22,8 +22,7 @@ class ExceptionListener
             $response->setStatusCode(Response::HTTP_UNPROCESSABLE_ENTITY);
             $message = $exception->getMessage();
         } else {
-            $message = $exception->getMessage();
-            //$message = 'Internal Server Error';
+            $message = 'Internal Server Error';
             $response->setStatusCode(Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 

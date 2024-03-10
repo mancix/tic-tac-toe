@@ -1,0 +1,157 @@
+openapi: 3.0.0
+info:
+  title: Tic Tac Toe API Documentation
+  version: '0.1'
+paths:
+  "/new_game":
+    post:
+      description: Create a new game session
+      tags:
+        - TicTacToe
+      operationId: new_game
+      responses:
+        '200':
+          description: Status ok
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/NewGameResponse"
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/TicTacToeNotFoundResponse"
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/TicTacToeErrorResponse"
+  "/move":
+    post:
+      tags:
+        - TicTacToe
+      description: |
+                   Make a move passing the session id, player and position
+        
+                   The position param follows the following mapping:
+        
+                   ` 0 | 1 | 2 `
+        
+                    `---------`
+        
+                    ` 3 | 4 | 5 `
+        
+                    `---------`
+        
+                    ` 6 | 7 | 8`
+      operationId: make_a_move
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MoveRequest"
+      responses:
+        '200':
+          description: Status ok
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/MoveResponse"
+        '422':
+          description: Invalid params error.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/TicTacToeInvalidParamsResponse"
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/TicTacToeErrorResponse"
+  "/ping":
+    get:
+      tags:
+        - Ping
+      operationId: getPing
+      responses:
+        '200':
+          description: Status ok
+          content:
+            application/json:
+              schema:
+                properties:
+                  message:
+                    type: string
+                    example: pong
+                type: object
+components:
+  schemas:
+    NewGameResponse:
+      type: object
+      properties:
+        session_id:
+          type: integer
+          description: game session id
+          example: 1
+    MoveRequest:
+      type: object
+      properties:
+        session_id:
+          type: integer
+          description: game session id
+          example: 1
+          required: true
+        player:
+          type: integer
+          enum:
+            - 1
+            - 2
+          description: player number
+          example: 1
+          required: true
+        position:
+          type: integer
+          maximum: 8
+          minimum: 0
+          description: position
+          example: 8
+          required: true
+    MoveResponse:
+      type: object
+      properties:
+        board:
+          type: array
+          items:
+            type: array
+            items:
+              type: integer
+              nullable: true
+        winner:
+          type: integer
+          nullable: true
+          description: game winner, if the value is null, it means there is no winner or the game is not over
+          example: 1
+    TicTacToeErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+          description: error message
+          example: Internal server error
+    TicTacToeNotFoundResponse:
+      type: object
+      properties:
+        error:
+          type: string
+          description: error message
+          example: Game session not found
+    TicTacToeInvalidParamsResponse:
+      type: object
+      properties:
+        error:
+          type: string
+          description: error message
+          example: Game is over

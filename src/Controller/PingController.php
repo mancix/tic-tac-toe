@@ -11,6 +11,6 @@ class PingController extends AbstractController
     #[Route('/ping', name: 'app_ping')]
     public function index(): JsonResponse
     {
-        return $this->json('pong');
+        return $this->json(['message' => 'pong']);
     }
 }
