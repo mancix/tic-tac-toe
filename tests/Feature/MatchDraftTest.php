@@ -20,12 +20,6 @@ class MatchDraftTest extends WebTestCase
         parent::setUp();
     }
 
-    public function testCreateGameSession(): void
-    {
-        self::$client->request('POST', '/new_game');
-        $this->assertResponseIsSuccessful();
-    }
-
     /**
      * Simulate the following game:
      *  1 | 2 | 1
@@ -36,9 +30,8 @@ class MatchDraftTest extends WebTestCase
      */
     public function testADrawGame(): void
     {
-        $client = static::createClient();
-        $client->request('POST', '/new_game');
-        $response = $client->getResponse();
+        self::$client->request('POST', '/new_game');
+        $response = self::$client->getResponse();
         $data = json_decode($response->getContent(), true);
         $sessionId = $data['session_id'];
 
