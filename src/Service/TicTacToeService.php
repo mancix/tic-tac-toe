@@ -24,11 +24,6 @@ class TicTacToeService implements TicTacToeServiceInterface
      */
     private ?int $player = null;
 
-    /**
-     * @return array<int|null>[]
-     *
-     * @throws InvalidPositionException|InvalidPlayerException|AlreadyTakenPositionException|GameOverException|InvalidPlayerMoveException
-     */
     public function makeAMove(int $player, int $position): array
     {
         if (null !== $this->getWinner()) {

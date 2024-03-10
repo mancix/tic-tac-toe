@@ -30,7 +30,7 @@ passthru(
 
 passthru(
     sprintf(
-        'php bin/console doctrine:schema:create --env=%s',
+        'php bin/console doctrine:schema:create -q --env=%s',
         $env
     )
 );
