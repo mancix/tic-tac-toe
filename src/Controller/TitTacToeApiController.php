@@ -26,7 +26,7 @@ class TitTacToeApiController extends AbstractController
         $newSession = $this->ticTacToeSessionService->createNewGameSession();
 
         return $this->json([
-            'sessionId' => $newSession->getId(),
+            'session_id' => $newSession->getId(),
         ], 201);
     }
 
@@ -39,7 +39,7 @@ class TitTacToeApiController extends AbstractController
     #[Route('/move', name: 'make-a-move-api', methods: ['POST'])]
     public function makeAMove(#[MapRequestPayload] MakeAMoveRequest $makeAMoveRequest): JsonResponse
     {
-        $gameSession = $this->ticTacToeSessionService->getGameSessionById($makeAMoveRequest->getId());
+        $gameSession = $this->ticTacToeSessionService->getGameSessionById($makeAMoveRequest->session_id);
         if (null === $gameSession) {
             throw new GameSessionNotFound();
         }
@@ -48,7 +48,7 @@ class TitTacToeApiController extends AbstractController
         if (0 === $this->ticTacToeService->getNumberOfRemainingMoves()) {
             throw new GameOverException();
         }
-        $board = $this->ticTacToeService->makeAMove($makeAMoveRequest->getPlayer(), $makeAMoveRequest->getPosition());
+        $board = $this->ticTacToeService->makeAMove($makeAMoveRequest->player, $makeAMoveRequest->position);
         $gameSession->setBoard($board);
         $gameSession->setLastPlayer($this->ticTacToeService->getLastPlayer());
         $this->ticTacToeSessionService->saveGameSession($gameSession);

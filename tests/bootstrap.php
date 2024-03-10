@@ -12,4 +12,25 @@ if ($_SERVER['APP_DEBUG']) {
     umask(0000);
 }
 
-// https://symfony.com/doc/current/testing.html#configuring-a-database-for-tests
+$env = 'test';
+
+passthru(
+    sprintf(
+        'php bin/console doctrine:database:drop --if-exists --force --env=%s',
+        $env
+    )
+);
+
+passthru(
+    sprintf(
+        'php bin/console doctrine:database:create --if-not-exists --env=%s',
+        $env
+    )
+);
+
+passthru(
+    sprintf(
+        'php bin/console doctrine:schema:create --env=%s',
+        $env
+    )
+);

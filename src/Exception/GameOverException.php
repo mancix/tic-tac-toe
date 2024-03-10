@@ -2,6 +2,7 @@
 
 namespace App\Exception;
 
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 
 class GameOverException extends \Exception implements HttpExceptionInterface
@@ -15,7 +16,7 @@ class GameOverException extends \Exception implements HttpExceptionInterface
 
     public function getStatusCode(): int
     {
-        return 422;
+        return Response::HTTP_UNPROCESSABLE_ENTITY;
     }
 
     /**

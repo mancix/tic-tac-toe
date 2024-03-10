@@ -2,6 +2,7 @@
 
 namespace App\Exception;
 
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 
 class InvalidPositionException extends \Exception implements HttpExceptionInterface
@@ -15,9 +16,12 @@ class InvalidPositionException extends \Exception implements HttpExceptionInterf
 
     public function getStatusCode(): int
     {
-        return 422;
+        return Response::HTTP_UNPROCESSABLE_ENTITY;
     }
 
+    /**
+     * @return array<void>
+     */
     public function getHeaders(): array
     {
         return [];

@@ -2,9 +2,10 @@
 
 namespace App\Exception;
 
-use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-class GameSessionNotFound extends \Exception implements HttpExceptionInterface
+class GameSessionNotFound extends NotFoundHttpException
 {
     public const MESSAGE = 'Game session not found';
 
@@ -15,9 +16,12 @@ class GameSessionNotFound extends \Exception implements HttpExceptionInterface
 
     public function getStatusCode(): int
     {
-        return 404;
+        return Response::HTTP_NOT_FOUND;
     }
 
+    /**
+     * @return array<void>
+     */
     public function getHeaders(): array
     {
         return [];
