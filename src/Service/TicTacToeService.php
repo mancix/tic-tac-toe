@@ -2,11 +2,11 @@
 
 namespace App\Service;
 
-use App\Exception\AlreadyTakenPositionException;
-use App\Exception\GameOverException;
-use App\Exception\InvalidPlayerException;
-use App\Exception\InvalidPlayerMoveException;
-use App\Exception\InvalidPositionException;
+use App\Exception\TicTacToeServiceException\AlreadyTakenPositionException;
+use App\Exception\TicTacToeServiceException\GameOverException;
+use App\Exception\TicTacToeServiceException\InvalidPlayerException;
+use App\Exception\TicTacToeServiceException\InvalidPlayerMoveException;
+use App\Exception\TicTacToeServiceException\InvalidPositionException;
 
 class TicTacToeService implements TicTacToeServiceInterface
 {

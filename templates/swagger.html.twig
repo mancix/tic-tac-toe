@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Tic Tac Toe Swagger UI{% endblock %}</title>
+    <link href="{{ asset('css/swagger-ui.css') }}" rel="stylesheet"/>
+    <link href="{{ asset('css/index.css') }}" rel="stylesheet"/>
+    <link rel="icon" type="image/png" href="{{ asset('img/favicon-32x32.png') }}" sizes="32x32"/>
+    <link rel="icon" type="image/png" href="{{ asset('img/favicon-16x16.png') }}" sizes="16x16"/>
+</head>
+
+<body>
+<div id="swagger-ui"></div>
+<script src="{{ asset('js/swagger-ui-bundle.js') }}" charset="UTF-8"></script>
+<script src="{{ asset('js/swagger-ui-standalone-preset.js') }}" charset="UTF-8"></script>
+<script charset="UTF-8">
+    window.onload = function () {
+        const ui = SwaggerUIBundle({
+            url: "{{ asset('doc/swagger.json') }}",
+            dom_id: '#swagger-ui',
+            presets: [
+                SwaggerUIBundle.presets.apis,
+                SwaggerUIStandalonePreset
+            ],
+            layout: "StandaloneLayout"
+        })
+        window.ui = ui
+    }
+</script>
+</body>
+</html>

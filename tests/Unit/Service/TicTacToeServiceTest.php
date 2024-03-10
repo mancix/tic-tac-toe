@@ -2,10 +2,10 @@
 
 namespace App\Tests\Unit\Service;
 
-use App\Exception\AlreadyTakenPositionException;
-use App\Exception\GameOverException;
-use App\Exception\InvalidPlayerException;
-use App\Exception\InvalidPositionException;
+use App\Exception\TicTacToeServiceException\AlreadyTakenPositionException;
+use App\Exception\TicTacToeServiceException\GameOverException;
+use App\Exception\TicTacToeServiceException\InvalidPlayerException;
+use App\Exception\TicTacToeServiceException\InvalidPositionException;
 use App\Service\TicTacToeService;
 use PHPUnit\Framework\TestCase;
 
@@ -186,11 +186,6 @@ class TicTacToeServiceTest extends TestCase
         $this->ticTacToeService->makeAMove(2, 7);
     }
 
-    private function initializeBoard(): void
-    {
-        $this->ticTacToeService = new TicTacToeService();
-    }
-
     public function testInvalidPlayer(): void
     {
         $this->expectException(InvalidPlayerException::class);
@@ -204,5 +199,10 @@ class TicTacToeServiceTest extends TestCase
         $this->expectExceptionMessage('Position already taken');
         $this->ticTacToeService->makeAMove(1, 0);
         $this->ticTacToeService->makeAMove(2, 0);
+    }
+
+    private function initializeBoard(): void
+    {
+        $this->ticTacToeService = new TicTacToeService();
     }
 }

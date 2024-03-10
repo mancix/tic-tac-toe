@@ -2,11 +2,10 @@
 
 namespace App\Dto;
 
-use App\Exception\InvalidPlayerException;
-use App\Exception\InvalidPositionException;
+use App\Exception\TicTacToeServiceException\InvalidPlayerException;
+use App\Exception\TicTacToeServiceException\InvalidPositionException;
 use Symfony\Component\Validator\Constraints as Assert;
 
-// https://github.com/symfony/symfony/issues/50759
 final readonly class MakeAMoveRequest
 {
     public function __construct(
@@ -22,5 +21,20 @@ final readonly class MakeAMoveRequest
         #[Assert\Range(notInRangeMessage: InvalidPositionException::MESSAGE, min: 0, max: 8)]
         public int $position,
     ) {
+    }
+
+    public function getSessionId(): int
+    {
+        return $this->session_id;
+    }
+
+    public function getPlayer(): int
+    {
+        return $this->player;
+    }
+
+    public function getPosition(): int
+    {
+        return $this->position;
     }
 }

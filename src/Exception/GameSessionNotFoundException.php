@@ -3,11 +3,11 @@
 namespace App\Exception;
 
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-class InvalidPlayerException extends \Exception implements HttpExceptionInterface
+class GameSessionNotFoundException extends NotFoundHttpException
 {
-    public const MESSAGE = 'The player must be 1 or 2';
+    public const MESSAGE = 'Game session not found';
 
     public function __construct()
     {
@@ -16,7 +16,7 @@ class InvalidPlayerException extends \Exception implements HttpExceptionInterfac
 
     public function getStatusCode(): int
     {
-        return Response::HTTP_UNPROCESSABLE_ENTITY;
+        return Response::HTTP_NOT_FOUND;
     }
 
     /**

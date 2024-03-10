@@ -3,8 +3,8 @@
 namespace App\Controller;
 
 use App\Dto\MakeAMoveRequest;
-use App\Exception\GameOverException;
-use App\Exception\GameSessionNotFound;
+use App\Exception\GameSessionNotFoundException;
+use App\Exception\TicTacToeServiceException\GameOverException;
 use App\Service\TicTacToeServiceInterface;
 use App\Service\TicTacToeSessionServiceInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -33,22 +33,21 @@ class TitTacToeApiController extends AbstractController
     /**
      * @param MakeAMoveRequest $makeAMoveRequest
      *
-     * @throws GameOverException
-     * @throws GameSessionNotFound
+     * @throws GameOverException|GameSessionNotFoundException
      */
     #[Route('/move', name: 'make-a-move-api', methods: ['POST'])]
     public function makeAMove(#[MapRequestPayload] MakeAMoveRequest $makeAMoveRequest): JsonResponse
     {
-        $gameSession = $this->ticTacToeSessionService->getGameSessionById($makeAMoveRequest->session_id);
+        $gameSession = $this->ticTacToeSessionService->getGameSessionById($makeAMoveRequest->getSessionId());
         if (null === $gameSession) {
-            throw new GameSessionNotFound();
+            throw new GameSessionNotFoundException();
         }
 
         $this->ticTacToeService->restoreGame($gameSession->getBoard(), $gameSession->getLastPlayer());
         if (0 === $this->ticTacToeService->getNumberOfRemainingMoves()) {
             throw new GameOverException();
         }
-        $board = $this->ticTacToeService->makeAMove($makeAMoveRequest->player, $makeAMoveRequest->position);
+        $board = $this->ticTacToeService->makeAMove($makeAMoveRequest->getPlayer(), $makeAMoveRequest->getPosition());
         $gameSession->setBoard($board);
         $gameSession->setLastPlayer($this->ticTacToeService->getLastPlayer());
         $this->ticTacToeSessionService->saveGameSession($gameSession);
